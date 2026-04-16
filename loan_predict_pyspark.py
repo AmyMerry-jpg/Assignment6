@@ -1,15 +1,7 @@
 
-"""
-loan_predict_pyspark.py
+# Assignment 6 
 
-Objective:
-Predict loan approval status using PySpark ML.
-This script demonstrates a full end-to-end ML workflow including:
-- Data preprocessing
-- Feature engineering
-- Model training
-- Model evaluation
-"""
+# Imports
 
 import os
 from pyspark.sql import SparkSession
@@ -57,8 +49,7 @@ df = df.drop("Loan_ID")
 
 # Handling Missing Values
 
-# Categorical columns → replace missing values with "Unknown"
-# Rationale: preserves row count and avoids bias from row deletion
+# Categorical: replace missing values with "Unknown" which preserves row count and avoids bias from row deletion
 categorical_cols = [
     "Gender", "Married", "Dependents",
     "Education", "Self_Employed", "Property_Area"
@@ -67,8 +58,7 @@ categorical_cols = [
 for c in categorical_cols:
     df = df.fillna({c: "Unknown"})
 
-# Numerical columns → median imputation
-# Rationale: median is robust to skewed income distributions
+# Numerical: median input works for the skewed income distributions
 numerical_cols = [
     "ApplicantIncome",
     "CoapplicantIncome",
@@ -83,8 +73,7 @@ for c in numerical_cols:
 
 # Outliers
 
-# Income variables are highly skewed → cap extreme values (Winsorization)
-# Rationale: prevents models from being dominated by extreme salaries
+# Income variables are highly skewed so cap extreme values to prevent models from being dominated by extreme salaries
 
 income_cap = df.approxQuantile("ApplicantIncome", [0.99], 0.01)[0]
 df = df.withColumn(
@@ -95,8 +84,8 @@ df = df.withColumn(
 
 # Discretization
 
-# Discretize LoanAmount into bins to capture non‑linear effects
-# Rationale: Tree-based models benefit from bucketed numeric variables
+# Bin LoanAmount to capture non‑linear effects since tree-based models benefit from bucketed numeric variables
+
 splits = [-float("inf"), 100, 200, 300, float("inf")]
 
 bucketizer = Bucketizer(
@@ -119,8 +108,7 @@ df = df.withColumn(
 
 # Encode Categorical Variables
 
-# StringIndexer converts categorical text values to numeric indices
-# handleInvalid="keep" prevents crashes on unseen categories
+# StringIndexer converts categorical text values to numeric indices and handleInvalid="keep" prevents crashes on unseen categories
 
 indexers = [
     StringIndexer(
@@ -130,8 +118,6 @@ indexers = [
     ) for c in categorical_cols
 ]
 
-
-# Feature Vector Assembly
 
 # Combine all selected features into a single feature vector
 
@@ -155,13 +141,13 @@ train_df, test_df = df.randomSplit([0.8, 0.2], seed=42)
 
 # Model Definitions 
 
-# Logistic Regression – strong baseline for binary classification
+# Logistic Regression: baseline for binary classification
 lr = LogisticRegression(
     featuresCol="features",
     labelCol="label"
 )
 
-# Random Forest – handles non-linearities and interactions well
+# Random Forest: handles non-linearities and interactions well
 rf = RandomForestClassifier(
     featuresCol="features",
     labelCol="label",
