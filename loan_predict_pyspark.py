@@ -27,6 +27,10 @@ from pyspark.ml.classification import (
 )
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 
+# Construct full input and output paths
+input_path = f"file://{os.path.join(base_dir, 'titanic.csv')}"
+output_path = os.path.join(base_dir, "output.txt")
+
 # Spark Session Initialization
 
 # SparkSession is the entry point for PySpark functionality
