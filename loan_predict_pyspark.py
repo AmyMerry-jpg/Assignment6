@@ -41,10 +41,6 @@ spark = SparkSession.builder \
     .appName("LoanPredictionPySpark") \
     .getOrCreate()
 
-# Load Data
-
-base_dir = os.path.abspath(os.path.dirname(__file__))
-input_path = f"file://{os.path.join(base_dir, 'loan_data.csv')}"
 
 df = spark.read.csv(input_path, header=True, inferSchema=True)
 
