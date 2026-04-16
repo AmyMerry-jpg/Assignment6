@@ -31,7 +31,7 @@ from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
 # Construct full input and output paths
-input_path = f"file://{os.path.join(base_dir, 'titanic.csv')}"
+input_path = f"file://{os.path.join(base_dir, 'loan_data.csv')}"
 output_path = os.path.join(base_dir, "output.txt")
 
 # Spark Session Initialization
