@@ -210,6 +210,22 @@ for name, model in models.items():
 
     print(f"{name} Accuracy: {accuracy:.4f}")
 
+#output
+
+with open(output_path, "w") as f:
+    for name, model in models.items():
+        pipeline = Pipeline(
+            stages=indexers + [assembler, model]
+        )
+
+        fitted_model = pipeline.fit(train_df)
+        predictions = fitted_model.transform(test_df)
+        accuracy = evaluator.evaluate(predictions)
+
+        result = f"{name} Accuracy: {accuracy:.4f}"
+
+        print(result)
+        f.write(result + "\n")
 
 # Stop Spark 
 
